@@ -1,9 +1,17 @@
-import { parseError } from './core.js';
+import { parseError } from './core.js'
 
-interface CommandContext {
-  command?: (name: string, handler: (...args: string[]) => unknown | Promise<unknown>) => unknown;
-}
+export const name = 'error-explainer'
+export const inject = ['commands']
 
-export function registerErrorExplainer(ctx: CommandContext): void {
-  ctx.command?.('explain-error', async (...parts) => JSON.stringify(parseError(parts.join(' ')), null, 2));
+export function apply(ctx: any): void {
+  ctx.commands.register({
+    name: 'explain-error',
+    description: 'Parse a pasted stack trace into bounded frames (Python/Node/Rust/Java).',
+    recordInput: false,
+    async handler(invocation: any) {
+      const raw = String(invocation.rawInput ?? '').trim()
+      if (!raw) return { kind: 'error', text: 'usage: /explain-error <pasted stack trace>' }
+      return { kind: 'success', text: JSON.stringify(parseError(raw), null, 2) }
+    },
+  })
 }
