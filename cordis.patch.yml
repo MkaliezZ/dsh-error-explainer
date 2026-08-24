@@ -1,3 +1,4 @@
-- id: dsh-error-explainer
-  name: '@mkaliezz/dsh-error-explainer'
-  config: {}
+- insert:
+    - id: dsh-error-explainer
+      name: '@mkaliezz/dsh-error-explainer'
+      config: {}
